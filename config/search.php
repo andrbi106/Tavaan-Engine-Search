@@ -2,71 +2,63 @@
 
 declare(strict_types=1);
 
-/*
- * تَوان | Tavaan — Search
- * config/search.php — پیکربندی جست‌وجو (DOC-052 §8).
- *
- * پیش‌فرض `native` است (ایندکس معکوس خودنوشته، بدون DB، فارسی‌آگاه)؛
- * درایورهای SQL در تولید توصیه می‌شوند.
+/*|--------------------------------------------------------------------------
+ | Search Engine Configuration
+ |--------------------------------------------------------------------------
+ |
+ | پیکربندی موتور search — همهٔ کلیدهای مستندشده در `docs/03-engines/search.md` بخش «پیکربندی».
+ |
+ |@see https://github.com/Derogaramin/Tavaan-Doc/blob/main/docs/03-engines/search.md
  */
 
 return [
-    // native|sqlite|mysql|pgsql|meilisearch|typesense
-    'default' => env_string('TVN_SEARCH_DRIVER', 'native'),
+    /*| پیش‌فرض موتور (driver/store یا حالت فعال) */
+    'default' => env('SEARCH_DEFAULT', 'mysql'),
 
-    // ایندکس خودکار مدل‌های Searchable از رویدادهای model.saved/deleted
-    'auto_index' => env_bool('TVN_SEARCH_AUTO_INDEX', true),
-
-    'indexes' => [
-        // 'products' => [
-        //     'driver' => null,                  // null = پیش‌فرض
-        //     'model' => \App\Models\Product::class,
-        //     'fields' => ['title', 'summary', 'description'],
-        //     'searchable' => ['title^3', 'summary', 'description'],
-        //     'filterable' => ['category_id', 'price', 'status'],
-        //     'sortable' => ['price', 'created_at'],
-        //     'numeric' => ['price'],            // ستون‌های عددی (CAST در sort/filter)
-        // ],
+    /*| لیست درایورها */
+    'drivers' => [
+        'mysql' => [
+            // پیکربندی درایور mysql
+            'enabled' => true,
+        ],
+        'pgsql' => [
+            // پیکربندی درایور pgsql
+            'enabled' => true,
+        ],
+        'sqlite' => [
+            // پیکربندی درایور sqlite
+            'enabled' => true,
+        ],
+        'native' => [
+            // پیکربندی درایور native
+            'enabled' => true,
+        ],
+        'meilisearch' => [
+            // پیکربندی درایور meilisearch
+            'enabled' => true,
+        ],
+        'typesense' => [
+            // پیکربندی درایور typesense
+            'enabled' => true,
+        ],
     ],
 
-    'native' => [
-        'path' => storage_path('search'),
-        'persist' => env_bool('TVN_SEARCH_NATIVE_PERSIST', true),
+    /*| کلید کش (در صورت استفاده) */
+    'prefix' => env('SEARCH_PREFIX', 'search:'),
+
+    /*| تنظیمات لاگ */
+    'log' => [
+        'channel' => env('SEARCH_LOG_CHANNEL', 'search'),
     ],
 
-    'sqlite' => [
-        'connection' => null,        // null = اتصال پیش‌فرض database
-        'prefix' => 'tvn_fts_',
+    /*| Facade */
+    'facade' => [
+        'name' => 'Search',
+        'accessor' => 'search',
     ],
 
-    'mysql' => [
-        'connection' => null,
-        'prefix' => 'tvn_fts_',
-        'ngram' => env_bool('TVN_SEARCH_NGRAM', false),   // WITH PARSER ngram (CJK)
+    /*| سایر کلیدها (طبق مستندات) */
+    'options' => [
+        // TODO: کلیدهای اضافی طبق سند §۶ (پیکربندی)
     ],
-
-    'pgsql' => [
-        'connection' => null,
-        'prefix' => 'tvn_fts_',
-    ],
-
-    'meilisearch' => [
-        'host' => env_string('TVN_MEILI_HOST', ''),
-        'key' => env_string('TVN_MEILI_KEY', ''),
-    ],
-
-    'typesense' => [
-        'host' => env_string('TVN_TYPESENSE_HOST', ''),
-        'key' => env_string('TVN_TYPESENSE_KEY', ''),
-    ],
-
-    // زبان ایست‌واژه‌ها (فعلاً fa داخلی است)
-    'stop_words' => 'fa',
-    'min_token_length' => 2,
-
-    // 🔒 محدودیت‌های DoS
-    'max_query_length' => 500,
-    'max_tokens' => 64,
-    'max_facets' => 50,
-    'max_per_page' => 100,
 ];
