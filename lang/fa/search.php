@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-/*| پیام‌های fa برای موتور search */
-
 return [
-    'error_default' => 'خطای ناشناخته (search)',
-    'not_configured' => 'موتور پیکربندی نشده است (search)',
+    'error_index_not_found' => 'ایندکس «{0}» یافت نشد.',
+    'error_search' => 'خطا در جست‌وجو: {0}',
 ];

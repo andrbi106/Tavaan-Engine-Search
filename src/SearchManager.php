@@ -4,92 +4,63 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Search;
 
-use Tavaan\Core\Contracts\Config\RepositoryInterface as Config;
+use Tavaan\Engine\Search\Contracts\IndexInterface;
+use Tavaan\Engine\Search\Drivers\NativeIndex;
 
 /**
- * SearchManager — پیاده‌سازی اصلی موتور.
- *
- * @see \Tavaan\Engine\Search\Contracts\SearchManagerInterface
+ * SearchManager — مدیریت چندین ایندکس.
  */
-final class SearchManager implements Contracts\SearchManagerInterface
+final class SearchManager
 {
     /**
-     * @param Config $config پیکربندی موتور
+     * @var array<string, IndexInterface>
+     */
+    private array $indexes = [];
+
+    /**
+     * @param array<string, mixed> $config
      */
     public function __construct(
-        private readonly Config $config,
+        private readonly array $config = [],
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function index(/* ... */): mixed
+    public function index(string $name): IndexInterface
     {
-        // TODO: پیاده‌سازی index مطابق مستندات (سند §3 API).
-        return null;
+        if (!isset($this->indexes[$name])) {
+            $driver = $this->config['driver'] ?? 'native';
+            $this->indexes[$name] = match ($driver) {
+                default => new NativeIndex(),
+            };
+        }
+        return $this->indexes[$name];
+    }
+
+    public function addDocument(string $indexName, string $docId, string $text, float $boost = 1.0): void
+    {
+        $this->index($indexName)->index($docId, $text, $boost);
+    }
+
+    public function deleteDocument(string $indexName, string $docId): void
+    {
+        $this->index($indexName)->delete($docId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return list<array{docId: string, score: float}>
      */
-    public function delete(/* ... */): mixed
+    public function search(string $indexName, string $query, int $limit = 20): array
     {
-        // TODO: پیاده‌سازی delete مطابق مستندات (سند §3 API).
-        return null;
+        return $this->index($indexName)->search($query, $limit);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function indexMany(/* ... */): mixed
+    public function suggest(string $indexName, string $prefix, int $limit = 5): array
     {
-        // TODO: پیاده‌سازی indexMany مطابق مستندات (سند §3 API).
-        return null;
+        return $this->index($indexName)->suggest($prefix, $limit);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function search(/* ... */): mixed
+    public function count(string $indexName): int
     {
-        // TODO: پیاده‌سازی search مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function suggest(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی suggest مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createIndex(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی createIndex مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dropIndex(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی dropIndex مطابق مستندات (سند §3 API).
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function flush(/* ... */): mixed
-    {
-        // TODO: پیاده‌سازی flush مطابق مستندات (سند §3 API).
-        return null;
+        return $this->index($indexName)->count();
     }
 }

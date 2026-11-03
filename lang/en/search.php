@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-/*| پیام‌های en برای موتور search */
-
 return [
-    'error_default' => 'Unknown error (search)',
-    'not_configured' => 'Engine not configured (search)',
+    'error_index_not_found' => 'Index "{0}" not found.',
+    'error_search' => 'Search error: {0}',
 ];
