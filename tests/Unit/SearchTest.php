@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Search\Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tavaan\Testing\TestCase;
 use Tavaan\Engine\Search\SearchManager;
 use Tavaan\Engine\Search\Drivers\NativeIndex;
 use Tavaan\Engine\Search\Contracts\IndexInterface;
