@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Search\Drivers;
 
-use Tavaan\Core\Contracts\Config\RepositoryInterface as ConfigRepository;
-use Tavaan\Core\Contracts\Search\SearchDriverInterface;
+use Tavaan\Engine\Config\Contracts\RepositoryInterface as ConfigRepository;
+use Tavaan\Engine\Search\Contracts\SearchDriverInterface;
 use Tavaan\Engine\Search\Exceptions\SearchException;
 use Tavaan\Engine\Search\Highlighter;
 use Tavaan\Engine\Search\Persian;

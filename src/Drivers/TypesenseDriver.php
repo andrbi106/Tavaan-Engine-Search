@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tavaan\Engine\Search\Drivers;
 
-use Tavaan\Core\Contracts\Search\SearchDriverInterface;
+use Tavaan\Engine\Search\Contracts\SearchDriverInterface;
 use Tavaan\Engine\Search\Exceptions\SearchException;
 use Tavaan\Engine\Search\SearchResult;
 
