@@ -9,7 +9,7 @@ use Tavaan\Core\Contracts\Console\CommandInterface;
 /**
  * search:reindex command.
  */
-final class Search_reindexCommand implements CommandInterface
+final class SearchReindexCommand implements CommandInterface
 {
     public function name(): string
     {
